@@ -1,0 +1,8 @@
+beautifulsoup4
+mysql-connector-python
+python-dotenv
+pandas
+schedule
+matplotlib
+numpy
+seaborn
