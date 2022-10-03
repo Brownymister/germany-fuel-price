@@ -6,3 +6,4 @@ schedule
 matplotlib
 numpy
 seaborn
+GitPython

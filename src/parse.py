@@ -32,13 +32,6 @@ class Parse:
 
     prices: dict[int, int] = {}
 
-    def __init__(self) -> None:
-        self.scrape_all_prices()
-        schedule.every(2).hours.do(self.scrape_all_prices)
-
-        while True:
-            schedule.run_pending()
-
     def create_table_if_not_exsits(self, mydb):
         sql = """CREATE TABLE IF NOT EXISTS prices (date varchar(255) PRIMARY KEY,Berlin float,Stuttgart float,Muenchen float,Potsdam float,Bremen float,Wiesbaden float,Schwerin float,Hannover float,Duesseldorf float,Mainz float,Saarbruecken float,Dresden float,Magdeburg float,Kiel float,Erfurt float);"""
         mycursor = mydb.cursor()
@@ -98,4 +91,10 @@ class Parse:
         mydb.commit()
 
 
-Parse()
+parse = Parse()
+
+parse.scrape_all_prices()
+schedule.every(2).hours.do(parse.scrape_all_prices)
+
+while True:
+    schedule.run_pending()
