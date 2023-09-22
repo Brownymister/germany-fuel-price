@@ -1,7 +1,8 @@
 import datetime
 import os
 
-import mysql.connector
+# import mysql.connector
+import sqlite3
 import pandas as pd
 import requests
 import schedule
@@ -54,8 +55,8 @@ class Parse:
         for price in price_table:
             if price.find(class_="typ").find("a").text == "Super E10":
                 currant_price = float(
-                    price.find(class_="price fav_price").text.replace(",", ".")
-                )
+                    price.find(class_="price fav_price").text.replace(
+                        ",", "."))
                 prices.append(currant_price)
 
         print(city)
@@ -69,12 +70,7 @@ class Parse:
 
     def commit_to_db(self):
         load_dotenv()
-        mydb = mysql.connector.connect(
-            host=os.environ.get("DBHOST"),
-            user=os.environ.get("DBUSER"),
-            password=os.environ.get("PASSWORD"),
-            database=os.environ.get("DB"),
-        )
+        mydb = sqlite3.connect("fuel.db")
         self.create_table_if_not_exsits(mydb)
         commit = f"""INSERT INTO prices
         (date,Berlin,Stuttgart,Muenchen,Potsdam,Bremen,Wiesbaden,Schwerin,Hannover,

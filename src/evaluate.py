@@ -5,7 +5,7 @@ import sys
 from tracemalloc import start
 
 import matplotlib.pyplot as plt
-import mysql.connector
+import sqlite3
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -41,12 +41,7 @@ class Evaluate:
         self.start_date = start_date
         self.end_date = end_date
         load_dotenv()
-        mydb = mysql.connector.connect(
-            host=os.environ.get("DBHOST"),
-            user=os.environ.get("DBUSER"),
-            password=os.environ.get("PASSWORD"),
-            database=os.environ.get("DB"),
-        )
+        mydb = sqlite3.connect("fuel.db")
         get_prices = self.get_all_data_from_db(mydb)
 
         if self.start_date == "" and self.end_date == "":
@@ -63,7 +58,8 @@ class Evaluate:
     def get_data_by_time_spand(self, get_prices, start_date, end_date):
         selected_prices = []
         for day in get_prices:
-            created_at = datetime.datetime.strptime(day[0], "%Y-%m-%d %H:%M:%S")
+            created_at = datetime.datetime.strptime(day[0],
+                                                    "%Y-%m-%d %H:%M:%S")
             if start_date <= created_at <= end_date:
                 selected_prices.append(day)
 
@@ -72,8 +68,7 @@ class Evaluate:
             for (price, param) in zip(day, self.cities):
                 if param == "date":
                     price_of_day[param] = datetime.datetime.strptime(
-                        price, "%Y-%m-%d %H:%M:%S"
-                    )
+                        price, "%Y-%m-%d %H:%M:%S")
                 else:
                     price_of_day[param] = float(price)
             self.reformated_prices.append(price_of_day)
@@ -93,8 +88,7 @@ class Evaluate:
             for (price, param) in zip(day, self.cities):
                 if param == "date":
                     price_of_day[param] = datetime.datetime.strptime(
-                        price, "%Y-%m-%d %H:%M:%S"
-                    )
+                        price, "%Y-%m-%d %H:%M:%S")
                 else:
                     price_of_day[param] = float(price)
             self.reformated_prices.append(price_of_day)
